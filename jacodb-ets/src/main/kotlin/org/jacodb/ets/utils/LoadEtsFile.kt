@@ -78,6 +78,7 @@ fun generateEtsIR(
         node,
         script.pathString,
         if (isProject) "-p" else null,
+        "-e", // load entrypoints
         useArkAnalyzerTypeInference?.let { "-t $it" },
         path.pathString,
         output.pathString,
