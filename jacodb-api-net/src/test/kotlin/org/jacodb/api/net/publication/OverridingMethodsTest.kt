@@ -89,4 +89,15 @@ class OverridingMethodsTest {
         assertContains(overridings, childMethod)
     }
 
+    @Test
+    fun callSiteArgumentTypeTest() {
+        val callsiteClass = publication.findIlTypeOrNull(
+            TypeId(
+                listOf(),
+                testAsm,
+                "TACBuilder.Tests.Misc.CallsiteClassResolve"
+            )
+        )!!
+        val requiredCall = callsiteClass.methods.first { it.name == "Resolve" }
+    }
 }
