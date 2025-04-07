@@ -16,6 +16,7 @@
 
 package org.jacodb.api.net.features
 
+import com.jetbrains.rd.util.lifetime.isAlive
 import org.jacodb.api.net.TestDllServer
 import org.jacodb.api.net.generated.models.TypeId
 import org.jacodb.api.net.publication.IlPredefinedTypeExt.int32
@@ -26,6 +27,10 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.time.Duration
+import kotlinx.coroutines.delay
 
 class TypeRequestTest {
     companion object {
@@ -59,6 +64,33 @@ class TypeRequestTest {
             assertEquals(it, response.genericArgs[0])
             assertEquals(response.genericDefinition, requestGenericDefn)
         }
+    }
 
+    @Test
+    fun badRequestDoesNotFailBackend() {
+        val request = TypeId(
+            listOf(emptyTypeId()),
+            publication.findAsmNameByLocationOrNull(TestDllServer.testDllPath)!!,
+            "TACBuilder.Tests.InMemoryIlHierarchy.SingleParamBase`1"
+        )
+        val requestGenericDefn = publication.findIlTypeOrNull(
+            request
+        )
+        assertNotNull(requestGenericDefn)
+        val badSubst = TypeId(
+            listOf(emptyTypeId()),
+            publication.findAsmNameByLocationOrNull(TestDllServer.testDllPath)!!,
+            "Type.That.Does.Not.Exist.In.Asm"
+        )
+        val substs = listOf(badSubst, badSubst, badSubst)
+        substs.forEach {
+            val response = publication.findIlTypeOrNull(
+                TypeId(listOf(it), request.asmName, request.typeName)
+            )
+            assertNull(response)
+            assertTrue(server.lifetime.isAlive)
+        }
+        Thread.sleep(1_000L)
+        assertTrue(server.lifetime.isAlive)
     }
 }
