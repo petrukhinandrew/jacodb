@@ -32,6 +32,7 @@ open class RdServer(private val port: Int, private val netExePath: String, val d
     val protocol = createProtocol(lifetime)
 
     private var netProcess: Process = spawnDotNetProcess(netExePath)
+
     private fun createProtocol(processLifetime: Lifetime): Protocol {
         db.bindTo(this)
         return Protocol(

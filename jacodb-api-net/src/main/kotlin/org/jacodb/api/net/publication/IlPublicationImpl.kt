@@ -106,6 +106,7 @@ class IlPublicationImpl(
                         RpcTimeouts.longRunning
                     )
             }
+
             if (rawResponse.isEmpty()) return null;
             val response = IlTypeImpl.from(rawResponse.singleOrNull() ?: return null, this@IlPublicationImpl)
             return ResolvedIlTypeResult(response.id, response)

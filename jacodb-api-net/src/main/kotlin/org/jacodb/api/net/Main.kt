@@ -18,7 +18,6 @@ package org.jacodb.api.net
 
 import com.jetbrains.rd.framework.impl.RpcTimeouts
 import com.jetbrains.rd.framework.util.NetUtils
-import com.jetbrains.rd.util.threading.SynchronousScheduler
 import org.jacodb.api.net.database.IlDatabaseImpl
 import org.jacodb.api.net.features.IlMethodInstructionsFeature
 import org.jacodb.api.net.generated.models.PublicationRequest
@@ -38,7 +37,7 @@ fun main(args: Array<String>) {
     val server = RdServer(freePort, exePath, database)
     server.protocol.scheduler.invokeOrQueue {
         val res =
-            server.protocol.ilModel.ilSigModel.publication.sync(PublicationRequest(asmPaths), RpcTimeouts.longRunning)
+            server.protocol.ilModel.ilSigModel.publication.sync(PublicationRequest(asmPaths), RpcTimeouts.infinite)
         database.persistence.persistAsmHierarchy(res.reachableAsms, res.referencedAsms)
         database.persistence.persistTypes(res.reachableTypes)
     }

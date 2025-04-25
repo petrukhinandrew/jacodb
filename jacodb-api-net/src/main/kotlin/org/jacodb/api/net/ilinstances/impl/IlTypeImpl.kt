@@ -120,6 +120,7 @@ sealed class IlTypeImpl(private val dto: IlTypeDto, override val publication: Il
 
 class IlPointerType(dto: IlPointerTypeDto, publication: IlPublication) : IlTypeImpl(dto, publication) {
     override val nullable: Boolean? get() = true
+    val targetType: IlType by lazy { publication.findIlTypeOrNull(dto.targetType)!! }
 }
 
 open class IlValueType(private val dto: IlValueTypeDto, publication: IlPublication) : IlTypeImpl(dto, publication) {
