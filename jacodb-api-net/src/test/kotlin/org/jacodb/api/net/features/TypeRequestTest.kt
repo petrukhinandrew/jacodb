@@ -26,11 +26,15 @@ import org.jacodb.api.net.storage.TypeIdExt.emptyTypeId
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.time.Duration
-import kotlinx.coroutines.delay
+import org.jacodb.api.net.ilinstances.ext.makeByRefType
+import org.jacodb.api.net.ilinstances.ext.makePointerType
+import org.jacodb.api.net.ilinstances.impl.IlArrayType
+import org.jacodb.api.net.ilinstances.impl.IlPointerType
 
 class TypeRequestTest {
     companion object {
@@ -63,6 +67,24 @@ class TypeRequestTest {
             assertNotNull(response, "value expected")
             assertEquals(it, response.genericArgs[0])
             assertEquals(response.genericDefinition, requestGenericDefn)
+            val responsePtr = response.makePointerType()
+            assertIs<IlPointerType>(responsePtr)
+            assertFalse(responsePtr.isManaged)
+            val responsePtrRef = responsePtr.makeByRefType()
+            assertIs<IlPointerType>(responsePtrRef)
+            assertTrue(responsePtrRef.isManaged)
+            val selfArrSubst = publication.findIlTypeOrNull(
+                TypeId(listOf(TypeId(listOf(it.id), request.asmName, request.typeName)), request.asmName, request.typeName + "[]")
+            )
+
+            assertNotNull(selfArrSubst)
+            assertIs<IlArrayType>(selfArrSubst)
+            assertEquals(selfArrSubst.elementType.genericDefinition, requestGenericDefn)
+
+            val selfAsSubst = selfArrSubst.elementType
+            assertNotNull(selfAsSubst, "value expected")
+            assertEquals(it, selfAsSubst.genericArgs[0].genericArgs[0])
+            assertEquals(selfAsSubst.genericDefinition, requestGenericDefn)
         }
     }
 

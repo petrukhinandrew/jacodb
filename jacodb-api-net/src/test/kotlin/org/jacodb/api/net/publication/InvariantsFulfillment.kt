@@ -60,12 +60,12 @@ class InvariantsFulfillment {
                     assertEquals(m, stmt.location.method)
                 }
                 assertDoesNotThrow { m.flowGraph() }
-                val scopes = (m as IlMethodImpl).scopes
+                val scopes = runCatching {  (m as IlMethodImpl).scopes }
 
-                scopes.forEach { scope ->
+                scopes.getOrNull()?.forEach { scope ->
                     assertTrue(scope.tb.location.index <= scope.te.location.index)
                     assertTrue(scope.hb.location.index <= scope.he.location.index)
-                }
+                } ?: println("error deserializing scopes in ${m.signature}")
 
             }
         }

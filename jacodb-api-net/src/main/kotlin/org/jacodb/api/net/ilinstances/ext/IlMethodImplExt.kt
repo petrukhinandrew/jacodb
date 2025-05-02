@@ -21,7 +21,6 @@ import org.jacodb.api.net.IlPublication
 import org.jacodb.api.net.features.InMemoryIlHierarchy
 import org.jacodb.api.net.features.InMemoryIlHierarchyReq
 import org.jacodb.api.net.ilinstances.IlMethod
-import org.jacodb.api.net.ilinstances.impl.IlMethodImpl
 
 fun IlMethod.getOverridingMethods(pub: IlPublication): List<IlMethod> {
     val inheritors = runBlocking { InMemoryIlHierarchy.query(pub, InMemoryIlHierarchyReq(declaringType.id)) }
@@ -32,13 +31,12 @@ fun IlMethod.getOverridingMethods(pub: IlPublication): List<IlMethod> {
     }.toList()
 }
 
-fun IlMethod.isOverriding(other: IlMethod) =
-    other.baseMethod == baseMethod
-    || (baseMethod != null && baseMethod!!.isReturnTypeCovarianceAgnosticOverrideOf(other))
+fun IlMethod.isOverriding(other: IlMethod) = baseMethod != null &&
+        (other.baseMethod == baseMethod || baseMethod!!.isReturnTypeCovarianceAgnosticOverrideOf(other))
 
 internal fun IlMethod.isReturnTypeCovarianceAgnosticOverrideOf(method: IlMethod): Boolean {
     return method.attributes.any { it.type.name == "System.Runtime.CompilerServices.PreserveBaseOverridesAttribute" }
             && method.isVirtual
             && name == method.name
-            && method.parameters.zip(parameters).fold(true) { acc, (r, l) -> acc && r.type == l.type }
+            && method.parameters.zip(parameters).fold(true) { acc, (l, r) -> acc && (r.type == l.type) }
 }

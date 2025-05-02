@@ -135,6 +135,7 @@ object IlModel : Ext(IlRoot) {
     }
 
     private val IlCatchScopeDto = structdef extends IlEhScopeDto {
+        field("excType", typeId)
     }
 
     private val IlFilterScopeDto = structdef extends IlEhScopeDto {

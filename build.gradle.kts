@@ -4,7 +4,7 @@ val semVer: String? by project
 val includeDokka: String? by project
 
 group = "org.jacodb"
-version = semVer ?: "1.4-SNAPSHOT"
+version = "0.0.0"
 
 plugins {
     kotlin("jvm") version Versions.kotlin

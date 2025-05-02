@@ -17,6 +17,8 @@
 package org.jacodb.api.net.ilinstances.ext
 
 import org.jacodb.api.net.ilinstances.IlType
+import org.jacodb.api.net.ilinstances.impl.IlArrayType
+import org.jacodb.api.net.ilinstances.impl.IlPointerType
 
 fun IlType.isAssignableTo(type: IlType): Boolean = type.isAssignableFrom(this)
 
@@ -61,3 +63,12 @@ fun IlType.isSubclassOf(type: IlType): Boolean {
     }
     return false;
 }
+
+fun IlType.makeArrayType(): IlArrayType =
+    publication.findIlType(id.withTypeName { typeName -> "$typeName[]" }) as IlArrayType
+
+fun IlType.makePointerType(): IlPointerType =
+    publication.findIlType(id.withTypeName { typeName -> "$typeName*" }) as IlPointerType
+
+fun IlType.makeByRefType(): IlPointerType =
+    publication.findIlType(id.withTypeName { typeName -> "$typeName&" }) as IlPointerType

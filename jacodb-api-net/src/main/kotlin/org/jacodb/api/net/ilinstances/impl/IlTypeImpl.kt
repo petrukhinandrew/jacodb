@@ -25,6 +25,7 @@ import kotlin.LazyThreadSafetyMode.*
 import org.jacodb.api.net.ilinstances.IlField
 import org.jacodb.api.net.ilinstances.IlMethod
 import java.util.*
+import org.jacodb.api.net.publication.IlPredefinedAsmExt.mscorelib
 
 sealed class IlTypeImpl(private val dto: IlTypeDto, override val publication: IlPublication) : IlType {
 
@@ -59,8 +60,8 @@ sealed class IlTypeImpl(private val dto: IlTypeDto, override val publication: Il
         get() = dto.isGenericDefinition
     override val isGenericParameter: Boolean
         get() = dto.isGenericParam
-    override val genericParameterConstraints: List<IlType> by lazy { dto.genericParameterConstraints.map { publication.findIlTypeOrNull(it)!! } }
-    override val genericArgs: List<IlType> by lazy(PUBLICATION) { dto.genericArgs.map { publication.findIlTypeOrNull(it)!! } }
+    override val genericParameterConstraints: List<IlType> by lazy { dto.genericParameterConstraints.map { publication.findIlType(it) } }
+    override val genericArgs: List<IlType> by lazy(PUBLICATION) { dto.genericArgs.map { publication.findIlType(it) } }
 
     override val hasDefaultCtorConstraint: Boolean = dto.hasDefaultCtorConstraint
     override val hasNotNullValueTypeConstraint: Boolean = dto.hasNotNullValueTypeConstraint
@@ -74,6 +75,10 @@ sealed class IlTypeImpl(private val dto: IlTypeDto, override val publication: Il
     override val interfaces: List<IlType> by lazy(PUBLICATION) {
         dto.interfaces.mapNotNull { publication.findIlTypeOrNull(it) }
     }
+
+    override val id: TypeId
+        get() = TypeId(asmName = asmName, typeName = fullname, typeArgs = genericArgs.map { (it as IlTypeImpl).id })
+
     override val moduleToken: Int = dto.moduleToken
     override val typeToken: Int = dto.typeToken
     override val asmName = dto.asmName
@@ -120,14 +125,29 @@ sealed class IlTypeImpl(private val dto: IlTypeDto, override val publication: Il
 
 class IlPointerType(dto: IlPointerTypeDto, publication: IlPublication) : IlTypeImpl(dto, publication) {
     override val nullable: Boolean? get() = true
-    val targetType: IlType by lazy { publication.findIlTypeOrNull(dto.targetType)!! }
+    val targetType: IlType by lazy { publication.findIlType(dto.targetType) }
 }
 
-open class IlValueType(private val dto: IlValueTypeDto, publication: IlPublication) : IlTypeImpl(dto, publication) {
-    override val nullable: Boolean? get() = false
+open class IlValueType(dto: IlValueTypeDto, publication: IlPublication) : IlTypeImpl(dto, publication) {
+
+    override val nullable: Boolean by lazy {
+        dto.asmName == publication.mscorelib() &&
+                dto.fullname == "System.Nullable`1"
+    }
+
+    val underlyingNullableType: IlValueType? by lazy {
+        if (dto.asmName != publication.mscorelib() || dto.fullname != "System.Nullable`1")
+            null
+        else
+            publication.findIlType(dto.genericArgs.single()) as IlValueType
+    }
 }
 
-class IlEnumType(dto: IlEnumTypeDto, publication: IlPublication) : IlValueType(dto, publication)
+class IlEnumType(dto: IlEnumTypeDto, publication: IlPublication) : IlValueType(dto, publication) {
+    val underlyingType: IlType by lazy {
+        publication.findIlType(dto.underlyingType)
+    }
+}
 class IlPrimitiveType(dto: IlPrimitiveTypeDto, publication: IlPublication) : IlValueType(dto, publication)
 class IlStructType(dto: IlStructTypeDto, publication: IlPublication) : IlValueType(dto, publication)
 
@@ -136,7 +156,7 @@ open class IlReferenceType(dto: IlReferenceTypeDto, publication: IlPublication) 
 }
 
 class IlArrayType(private val dto: IlArrayTypeDto, publication: IlPublication) : IlReferenceType(dto, publication) {
-    val elementType: IlType by lazy { publication.findIlTypeOrNull(dto.elementType)!! }
+    val elementType: IlType by lazy { publication.findIlType(dto.elementType) }
 }
 
 class IlClassType(dto: IlClassTypeDto, publication: IlPublication) : IlReferenceType(dto, publication)

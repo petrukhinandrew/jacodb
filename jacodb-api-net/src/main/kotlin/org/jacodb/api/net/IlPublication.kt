@@ -33,6 +33,9 @@ interface IlPublication {
     val features: List<IlPublicationFeature>
     val featuresChain: IlFeaturesChain
     fun findIlTypeOrNull(typeId: TypeId): IlType?
+
+    fun findIlType(typeId: TypeId): IlType = findIlTypeOrNull(typeId)!!
+
     fun findAsmNameByLocationOrNull(location: String): String?
 }
 

@@ -123,6 +123,9 @@ abstract class IlEhScope {
 
     companion object {
         fun deserialize(src: IlMethodImpl, dto: IlEhScopeDto): IlEhScope {
+            check(src.instList.isNotEmpty()) {
+                "eh scopes present, but body not found for ${src.name}"
+            }
             return when (dto) {
                 is IlFilterScopeDto -> IlFilterScope(
                     src.instList[dto.tb],
@@ -133,6 +136,8 @@ abstract class IlEhScope {
                 )
 
                 is IlCatchScopeDto -> IlCatchScope(
+                    dto.excType,
+                    src.publication,
                     src.instList[dto.tb],
                     src.instList[dto.te],
                     src.instList[dto.hb],
@@ -159,8 +164,18 @@ abstract class IlEhScope {
     }
 }
 
-class IlCatchScope(override val tb: IlStmt, override val te: IlStmt, override val hb: IlStmt, override val he: IlStmt) :
-    IlEhScope()
+class IlCatchScope(
+    private val excType: TypeId,
+    private val pub: IlPublication,
+    override val tb: IlStmt,
+    override val te: IlStmt,
+    override val hb: IlStmt,
+    override val he: IlStmt
+) : IlEhScope() {
+    val exceptionType: IlType by lazy {
+        pub.findIlTypeOrNull(excType)!!
+    }
+}
 
 class IlFilterScope(
     override val tb: IlStmt,

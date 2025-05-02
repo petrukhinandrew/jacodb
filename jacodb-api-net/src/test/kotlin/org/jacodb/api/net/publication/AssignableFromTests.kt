@@ -77,7 +77,7 @@ class AssignableFromTests {
 
     @Test
     fun genericParameter() {
-        val param = publication.findIlTypeOrNull(TypeId(listOf(), testAsm, "TACBuilder.Tests.InMemoryIlHierarchy.SingleParamStruct`1+T"))
+        val param = publication.findIlTypeOrNull(TypeId(listOf(), testAsm, "TACBuilder.Tests.InMemoryIlHierarchy.SingleParamStruct`1!T"))
         assertNotNull(param)
         assertTrue(publication.int32().isAssignableTo(param))
         assertFalse(param.isAssignableFrom(publication.string()))

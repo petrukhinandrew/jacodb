@@ -87,7 +87,7 @@ class IlModel private constructor(
         }
         
         
-        const val serializationHash = 5169588667545297019L
+        const val serializationHash = -8038923504736244160L
         
     }
     override val serializersOwner: ISerializersOwner get() = IlModel
@@ -466,6 +466,7 @@ class IlAttrDto (
  * #### Generated from [IlModel.kt:137]
  */
 class IlCatchScopeDto (
+    val excType: TypeId,
     tb: Int,
     te: Int,
     hb: Int,
@@ -487,7 +488,8 @@ class IlCatchScopeDto (
             val te = buffer.readInt()
             val hb = buffer.readInt()
             val he = buffer.readInt()
-            return IlCatchScopeDto(tb, te, hb, he)
+            val excType = TypeId.read(ctx, buffer)
+            return IlCatchScopeDto(excType, tb, te, hb, he)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlCatchScopeDto)  {
@@ -495,6 +497,7 @@ class IlCatchScopeDto (
             buffer.writeInt(value.te)
             buffer.writeInt(value.hb)
             buffer.writeInt(value.he)
+            TypeId.write(ctx, buffer, value.excType)
         }
         
         
@@ -510,6 +513,7 @@ class IlCatchScopeDto (
         
         other as IlCatchScopeDto
         
+        if (excType != other.excType) return false
         if (tb != other.tb) return false
         if (te != other.te) return false
         if (hb != other.hb) return false
@@ -520,6 +524,7 @@ class IlCatchScopeDto (
     //hash code trait
     override fun hashCode(): Int  {
         var __r = 0
+        __r = __r*31 + excType.hashCode()
         __r = __r*31 + tb.hashCode()
         __r = __r*31 + te.hashCode()
         __r = __r*31 + hb.hashCode()
@@ -530,6 +535,7 @@ class IlCatchScopeDto (
     override fun print(printer: PrettyPrinter)  {
         printer.println("IlCatchScopeDto (")
         printer.indent {
+            print("excType = "); excType.print(printer); println()
             print("tb = "); tb.print(printer); println()
             print("te = "); te.print(printer); println()
             print("hb = "); hb.print(printer); println()
@@ -1342,7 +1348,7 @@ class IlErrVarDto (
 
 
 /**
- * #### Generated from [IlModel.kt:144]
+ * #### Generated from [IlModel.kt:145]
  */
 class IlFaultScopeDto (
     tb: Int,
@@ -1514,7 +1520,7 @@ class IlFieldDto (
 
 
 /**
- * #### Generated from [IlModel.kt:140]
+ * #### Generated from [IlModel.kt:141]
  */
 class IlFilterScopeDto (
     val fb: Int,
@@ -1602,7 +1608,7 @@ class IlFilterScopeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:146]
+ * #### Generated from [IlModel.kt:147]
  */
 class IlFinallyScopeDto (
     tb: Int,
@@ -1758,7 +1764,7 @@ class IlLocalVarDto (
 
 
 /**
- * #### Generated from [IlModel.kt:149]
+ * #### Generated from [IlModel.kt:150]
  */
 class IlMethodDto (
     val returnType: TypeId,
@@ -2872,7 +2878,7 @@ class IlReferenceTypeDto_Unknown (
 
 
 /**
- * #### Generated from [IlModel.kt:171]
+ * #### Generated from [IlModel.kt:172]
  */
 class IlSignatureDto (
     val returnType: TypeId,

@@ -41,7 +41,7 @@ class PointersDeserialization {
 
     @Test
     fun asteriskByteIsUnmanagedPointer() {
-        val astByte = publication.findIlTypeOrNull(TypeId(listOf(), publication.mscorelib(), "*System.Byte"))
+        val astByte = publication.findIlTypeOrNull(TypeId(listOf(), publication.mscorelib(), "System.Byte*"))
         assertNotNull(astByte)
         assertIs<IlPointerType>(astByte)
         assertTrue(!astByte.isManaged)
@@ -49,7 +49,7 @@ class PointersDeserialization {
 
     @Test
     fun apersandByteIsManagedPointer() {
-        val ampByte = publication.findIlTypeOrNull(TypeId(listOf(), publication.mscorelib(), "&System.Byte"))
+        val ampByte = publication.findIlTypeOrNull(TypeId(listOf(), publication.mscorelib(), "System.Byte&"))
         assertNotNull(ampByte)
         assertIs<IlPointerType>(ampByte)
         assertTrue(ampByte.isManaged)

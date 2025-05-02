@@ -133,8 +133,7 @@ object InMemoryIlHierarchy : IlFeature<InMemoryIlHierarchyReq, IlType> {
             }
 
             val argSatisfyParamsConstraints = paramToArg.all { (param, arg) ->
-                arg == null ||
-                        publication.findIlTypeOrNull(arg as TypeId)!!.satisfyConstraintsOf(param)
+                arg == null || publication.findIlTypeOrNull(arg as TypeId)!!.satisfyConstraintsOf(param)
             }
             if (!argSatisfyParamsConstraints) return null;
             val subTypeId = sub.id

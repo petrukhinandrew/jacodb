@@ -70,7 +70,7 @@ class OverridingMethodsTest {
             TypeId(
                 listOf(),
                 testAsm,
-                "IVuln"
+                "SlavaCases+IVuln"
             )
         )
         assertNotNull(parent)
@@ -78,7 +78,7 @@ class OverridingMethodsTest {
             TypeId(
                 listOf(),
                 testAsm,
-                "Vuln"
+                "SlavaCases+Vuln"
             )
         )
         assertNotNull(child)

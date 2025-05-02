@@ -61,7 +61,6 @@ interface IlType : IlInstance, CommonTypeName, CommonType {
     val asmName: String
     val name: String
     val id: TypeId
-        get() = TypeId(asmName = asmName, typeName = fullname, typeArgs = genericArgs.map { (it as IlTypeImpl).id })
     val size: Int
     val attributes: List<IlAttribute>
 
