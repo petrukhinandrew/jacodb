@@ -16,6 +16,7 @@
 
 package org.jacodb.api.net.ilinstances.ext
 
+import org.jacodb.api.net.generated.models.TypeId
 import org.jacodb.api.net.ilinstances.IlType
 import org.jacodb.api.net.ilinstances.impl.IlArrayType
 import org.jacodb.api.net.ilinstances.impl.IlPointerType
@@ -44,24 +45,31 @@ fun IlType.isAssignableFrom(type: IlType): Boolean = when {
     }
 }
 
-fun IlType.implementInterface(iface: IlType): Boolean {
+fun IlType.implementInterface(interfaceType: IlType): Boolean {
     var t: IlType? = this
+
     while (t != null) {
         val interfaces = t.interfaces
-        if (interfaces.any { i -> i == iface || i.implementInterface(iface) }) return true
+
+        if (interfaces.any { i -> i == interfaceType || i.implementInterface(interfaceType) })
+            return true
+
         t = t.baseType
     }
     return false
 }
 
 fun IlType.isSubclassOf(type: IlType): Boolean {
-    var p: IlType? = this;
-    if (p == type) return false;
+    var p: IlType? = this
+
+    if (p == type) return false
+
     while (p != null) {
-        if (p == type) return true;
         p = p.baseType
+        if (p == type) return true
     }
-    return false;
+
+    return false
 }
 
 fun IlType.makeArrayType(): IlArrayType =
@@ -72,3 +80,16 @@ fun IlType.makePointerType(): IlPointerType =
 
 fun IlType.makeByRefType(): IlPointerType =
     publication.findIlType(id.withTypeName { typeName -> "$typeName&" }) as IlPointerType
+
+fun IlType.makeGenericType(subst: List<IlType>): IlType {
+    check(this.isGenericDefinition) {
+        "makeGenericType only allowed on type definition"
+    }
+    check(this.genericArgs.size == subst.size) {
+        "inconsistent number of generic arguments"
+    }
+    check(this.genericArgs.zip(subst).all { (param, arg) -> arg.isAssignableTo(param) }) {
+        "cannot use arg in substitution"
+    }
+    return publication.findIlType(TypeId(subst.map { it.id }, this.asmName, this.fullname))
+}
