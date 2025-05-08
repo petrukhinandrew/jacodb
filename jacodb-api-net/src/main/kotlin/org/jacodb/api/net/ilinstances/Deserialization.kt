@@ -210,7 +210,7 @@ fun IlExprDto.deserialize(ilMethod: IlMethod): IlExpr {
         )
 
         is IlConvExprDto -> IlConvCastExpr(publication.findIlTypeOrNull(targetType)!!, operand.deserialize(ilMethod))
-        is IlBoxExprDto -> IlBoxExpr(publication.findIlTypeOrNull(targetType)!!, operand.deserialize(ilMethod))
+        is IlBoxExprDto -> IlBoxExpr(publication.findIlTypeOrNull(targetType)!!, publication.findIlType(boxedType), operand.deserialize(ilMethod))
         is IlUnboxExprDto -> IlUnboxExpr(publication.findIlTypeOrNull(targetType)!!, operand.deserialize(ilMethod))
 
         is IlIsInstExprDto -> IlIsInstExpr(publication.findIlTypeOrNull(targetType)!!, operand.deserialize(ilMethod))

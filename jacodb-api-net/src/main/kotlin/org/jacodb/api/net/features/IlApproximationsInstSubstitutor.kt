@@ -205,7 +205,7 @@ object IlApproximationsInstSubstitutor : IlExprVisitor<IlExpr>, IlStmtVisitor<Il
     }
 
     override fun visitIlBoxExpr(expr: IlBoxExpr): IlExpr {
-        return IlBoxExpr(expr.expectedType.eliminateApproximation(), expr.operand.accept(this))
+        return IlBoxExpr(expr.expectedType.eliminateApproximation(), expr.boxedType.eliminateApproximation(), expr.operand.accept(this))
     }
 
     override fun visitIlUnboxExpr(expr: IlUnboxExpr): IlExpr {

@@ -208,7 +208,7 @@ class IlConvCastExpr(override val type: IlType, operand: IlExpr) : IlCastExpr(ty
     }
 }
 
-class IlBoxExpr(override val type: IlType, operand: IlExpr) : IlCastExpr(type, operand) {
+class IlBoxExpr(override val type: IlType, val boxedType: IlType, operand: IlExpr) : IlCastExpr(type, operand) {
     override fun <T> accept(visitor: IlExprVisitor<T>): T {
         return visitor.visitIlBoxExpr(this)
     }

@@ -127,7 +127,9 @@ object IlMethodBodyModel : Ext(IlRoot) {
     }
 
     private val IlConvExprDto = structdef extends IlCastExprDto {}
-    private val IlBoxExprDto = structdef extends IlCastExprDto {}
+    private val IlBoxExprDto = structdef extends IlCastExprDto {
+        field("boxedType", typeId)
+    }
     private val IlUnboxExprDto = structdef extends IlCastExprDto {}
     private val IlCastClassExprDto = structdef extends IlCastExprDto {}
     private val IlIsInstExprDto = structdef extends IlCastExprDto {}
