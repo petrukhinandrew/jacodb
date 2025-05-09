@@ -230,8 +230,10 @@ class IlUnboxExpr(override val type: IlType, operand: IlExpr) :
 }
 
 // TODO maybe we need value of`type` to be nullable here
-class IlIsInstExpr(override val type: IlType, operand: IlExpr) :
-    IlCastExpr(type, operand) {
+class IlIsInstExpr(expectedType: IlType, operand: IlExpr) : IlCastExpr(expectedType, operand) {
+    override val type: IlType
+        get() = operand.type
+
     override fun <T> accept(visitor: IlExprVisitor<T>): T {
         return visitor.visitIlIsInstExpr(this)
     }
@@ -239,7 +241,6 @@ class IlIsInstExpr(override val type: IlType, operand: IlExpr) :
     override fun toString(): String {
         return "$operand isinst $expectedType"
     }
-
 }
 
 interface IlRefExpr : IlValue
