@@ -29,6 +29,15 @@ class IlFieldImpl(override val declaringType: IlType, private val dto: IlFieldDt
     override val isStatic: Boolean = dto.isStatic
     override val name: String = dto.name
     override val offset: Int = dto.offset
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is IlFieldImpl) return false
+
+        if (this === other) return true
+
+        return declaringType == other.declaringType && name == other.name && fieldType == other.fieldType
+    }
+
     override fun toString(): String {
         return if (isStatic) "$declaringType.$name" else "$.$name"
     }

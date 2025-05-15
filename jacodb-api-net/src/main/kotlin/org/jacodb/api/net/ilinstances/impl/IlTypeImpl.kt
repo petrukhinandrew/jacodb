@@ -109,6 +109,9 @@ sealed class IlTypeImpl(private val dto: IlTypeDto, override val publication: Il
 
     override fun equals(other: Any?): Boolean {
         if (other == null || other !is IlTypeImpl) return false
+
+        if (this === other) return true
+
         return asmName == other.asmName
                 && fullname == other.fullname
                 && genericArgs.zip(other.genericArgs).all { (l, r) -> l == r }

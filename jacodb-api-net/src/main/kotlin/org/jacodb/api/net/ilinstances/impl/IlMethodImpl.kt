@@ -104,6 +104,9 @@ class IlMethodImpl(override val declaringType: IlTypeImpl, private val dto: IlMe
 
     override fun equals(other: Any?): Boolean {
         if (other == null || other !is IlMethodImpl) return false
+
+        if (this === other) return true
+
         // TODO: maybe compare by types and name
         return signature == other.signature
     }
