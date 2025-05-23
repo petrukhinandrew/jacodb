@@ -32,7 +32,7 @@ import kotlin.jvm.JvmStatic
 
 
 /**
- * #### Generated from [IlModel.kt:23]
+ * #### Generated from [IlModel.kt:24]
  */
 class IlModel private constructor(
 ) : RdExtBase() {
@@ -87,7 +87,7 @@ class IlModel private constructor(
         }
         
         
-        const val serializationHash = -8038923504736244160L
+        const val serializationHash = 5406026626313613222L
         
     }
     override val serializersOwner: ISerializersOwner get() = IlModel
@@ -116,7 +116,7 @@ val IProtocol.ilModel get() = getOrCreateExtension(IlModel::class) { @Suppress("
 
 
 /**
- * #### Generated from [IlModel.kt:88]
+ * #### Generated from [IlModel.kt:91]
  */
 class IlArrayTypeDto (
     val elementType: TypeId,
@@ -187,7 +187,7 @@ class IlArrayTypeDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlArrayTypeDto  {
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val moduleToken = buffer.readInt()
             val typeToken = buffer.readInt()
             val namespaceName = buffer.readString()
@@ -221,7 +221,7 @@ class IlArrayTypeDto (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlArrayTypeDto)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeInt(value.moduleToken)
             buffer.writeInt(value.typeToken)
             buffer.writeString(value.namespaceName)
@@ -379,7 +379,7 @@ class IlArrayTypeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:92]
+ * #### Generated from [IlModel.kt:95]
  */
 class IlAttrDto (
     val attrType: TypeId,
@@ -463,7 +463,7 @@ class IlAttrDto (
 
 
 /**
- * #### Generated from [IlModel.kt:137]
+ * #### Generated from [IlModel.kt:140]
  */
 class IlCatchScopeDto (
     val excType: TypeId,
@@ -551,7 +551,7 @@ class IlCatchScopeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:86]
+ * #### Generated from [IlModel.kt:89]
  */
 class IlClassTypeDto (
     asmName: String,
@@ -621,7 +621,7 @@ class IlClassTypeDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlClassTypeDto  {
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val moduleToken = buffer.readInt()
             val typeToken = buffer.readInt()
             val namespaceName = buffer.readString()
@@ -654,7 +654,7 @@ class IlClassTypeDto (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlClassTypeDto)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeInt(value.moduleToken)
             buffer.writeInt(value.typeToken)
             buffer.writeString(value.namespaceName)
@@ -808,7 +808,7 @@ class IlClassTypeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:33]
+ * #### Generated from [IlModel.kt:36]
  */
 abstract class IlDto (
 ) : IPrintable {
@@ -889,7 +889,7 @@ class IlDto_Unknown (
 
 
 /**
- * #### Generated from [IlModel.kt:130]
+ * #### Generated from [IlModel.kt:133]
  */
 abstract class IlEhScopeDto (
     val tb: Int,
@@ -1005,7 +1005,7 @@ class IlEhScopeDto_Unknown (
 
 
 /**
- * #### Generated from [IlModel.kt:75]
+ * #### Generated from [IlModel.kt:78]
  */
 class IlEnumTypeDto (
     val underlyingType: TypeId,
@@ -1078,7 +1078,7 @@ class IlEnumTypeDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlEnumTypeDto  {
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val moduleToken = buffer.readInt()
             val typeToken = buffer.readInt()
             val namespaceName = buffer.readString()
@@ -1114,7 +1114,7 @@ class IlEnumTypeDto (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlEnumTypeDto)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeInt(value.moduleToken)
             buffer.writeInt(value.typeToken)
             buffer.writeString(value.namespaceName)
@@ -1280,7 +1280,7 @@ class IlEnumTypeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:128]
+ * #### Generated from [IlModel.kt:131]
  */
 class IlErrVarDto (
     type: TypeId,
@@ -1348,7 +1348,7 @@ class IlErrVarDto (
 
 
 /**
- * #### Generated from [IlModel.kt:145]
+ * #### Generated from [IlModel.kt:148]
  */
 class IlFaultScopeDto (
     tb: Int,
@@ -1430,7 +1430,7 @@ class IlFaultScopeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:100]
+ * #### Generated from [IlModel.kt:103]
  */
 class IlFieldDto (
     val fieldType: TypeId,
@@ -1520,7 +1520,7 @@ class IlFieldDto (
 
 
 /**
- * #### Generated from [IlModel.kt:141]
+ * #### Generated from [IlModel.kt:144]
  */
 class IlFilterScopeDto (
     val fb: Int,
@@ -1608,7 +1608,7 @@ class IlFilterScopeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:147]
+ * #### Generated from [IlModel.kt:150]
  */
 class IlFinallyScopeDto (
     tb: Int,
@@ -1690,7 +1690,7 @@ class IlFinallyScopeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:122]
+ * #### Generated from [IlModel.kt:125]
  */
 class IlLocalVarDto (
     val isPinned: Boolean,
@@ -1764,7 +1764,7 @@ class IlLocalVarDto (
 
 
 /**
- * #### Generated from [IlModel.kt:150]
+ * #### Generated from [IlModel.kt:153]
  */
 class IlMethodDto (
     val returnType: TypeId,
@@ -1785,7 +1785,8 @@ class IlMethodDto (
     val isConstructed: Boolean,
     val isVirtual: Boolean,
     val isAbstract: Boolean,
-    val baseMethod: InstanceId?
+    val baseMethod: InstanceId?,
+    val filePath: String?
 ) : IlDto (
 ) {
     //companion
@@ -1814,7 +1815,8 @@ class IlMethodDto (
             val isVirtual = buffer.readBool()
             val isAbstract = buffer.readBool()
             val baseMethod = buffer.readNullable { InstanceId.read(ctx, buffer) }
-            return IlMethodDto(returnType, attrs, isStatic, isGeneric, isGenericDefinition, signature, name, parameters, genericArgs, resolved, locals, temps, errs, ehScopes, rawInstList, isConstructed, isVirtual, isAbstract, baseMethod)
+            val filePath = buffer.readNullable { ctx.readInterned(buffer, "StmtLocInternScope") { _, _ -> buffer.readString() } }
+            return IlMethodDto(returnType, attrs, isStatic, isGeneric, isGenericDefinition, signature, name, parameters, genericArgs, resolved, locals, temps, errs, ehScopes, rawInstList, isConstructed, isVirtual, isAbstract, baseMethod, filePath)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlMethodDto)  {
@@ -1837,6 +1839,7 @@ class IlMethodDto (
             buffer.writeBool(value.isVirtual)
             buffer.writeBool(value.isAbstract)
             buffer.writeNullable(value.baseMethod) { InstanceId.write(ctx, buffer, it) }
+            buffer.writeNullable(value.filePath) { ctx.writeInterned(buffer, it, "StmtLocInternScope") { _, _, internedValue -> buffer.writeString(internedValue) } }
         }
         
         
@@ -1871,6 +1874,7 @@ class IlMethodDto (
         if (isVirtual != other.isVirtual) return false
         if (isAbstract != other.isAbstract) return false
         if (baseMethod != other.baseMethod) return false
+        if (filePath != other.filePath) return false
         
         return true
     }
@@ -1896,6 +1900,7 @@ class IlMethodDto (
         __r = __r*31 + isVirtual.hashCode()
         __r = __r*31 + isAbstract.hashCode()
         __r = __r*31 + if (baseMethod != null) baseMethod.hashCode() else 0
+        __r = __r*31 + if (filePath != null) filePath.hashCode() else 0
         return __r
     }
     //pretty print
@@ -1921,6 +1926,7 @@ class IlMethodDto (
             print("isVirtual = "); isVirtual.print(printer); println()
             print("isAbstract = "); isAbstract.print(printer); println()
             print("baseMethod = "); baseMethod.print(printer); println()
+            print("filePath = "); filePath.print(printer); println()
         }
         printer.print(")")
     }
@@ -1932,7 +1938,7 @@ class IlMethodDto (
 
 
 /**
- * #### Generated from [IlModel.kt:109]
+ * #### Generated from [IlModel.kt:112]
  */
 data class IlParameterDto (
     val index: Int,
@@ -2013,7 +2019,7 @@ data class IlParameterDto (
 
 
 /**
- * #### Generated from [IlModel.kt:67]
+ * #### Generated from [IlModel.kt:70]
  */
 class IlPointerTypeDto (
     val targetType: TypeId,
@@ -2084,7 +2090,7 @@ class IlPointerTypeDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlPointerTypeDto  {
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val moduleToken = buffer.readInt()
             val typeToken = buffer.readInt()
             val namespaceName = buffer.readString()
@@ -2118,7 +2124,7 @@ class IlPointerTypeDto (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlPointerTypeDto)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeInt(value.moduleToken)
             buffer.writeInt(value.typeToken)
             buffer.writeString(value.namespaceName)
@@ -2276,7 +2282,7 @@ class IlPointerTypeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:73]
+ * #### Generated from [IlModel.kt:76]
  */
 class IlPrimitiveTypeDto (
     asmName: String,
@@ -2346,7 +2352,7 @@ class IlPrimitiveTypeDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlPrimitiveTypeDto  {
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val moduleToken = buffer.readInt()
             val typeToken = buffer.readInt()
             val namespaceName = buffer.readString()
@@ -2379,7 +2385,7 @@ class IlPrimitiveTypeDto (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlPrimitiveTypeDto)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeInt(value.moduleToken)
             buffer.writeInt(value.typeToken)
             buffer.writeString(value.namespaceName)
@@ -2533,7 +2539,7 @@ class IlPrimitiveTypeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:84]
+ * #### Generated from [IlModel.kt:87]
  */
 abstract class IlReferenceTypeDto (
     asmName: String,
@@ -2601,7 +2607,7 @@ abstract class IlReferenceTypeDto (
     companion object : IAbstractDeclaration<IlReferenceTypeDto> {
         override fun readUnknownInstance(ctx: SerializationCtx, buffer: AbstractBuffer, unknownId: RdId, size: Int): IlReferenceTypeDto  {
             val objectStartPosition = buffer.position
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val moduleToken = buffer.readInt()
             val typeToken = buffer.readInt()
             val namespaceName = buffer.readString()
@@ -2723,7 +2729,7 @@ class IlReferenceTypeDto_Unknown (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlReferenceTypeDto_Unknown)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeInt(value.moduleToken)
             buffer.writeInt(value.typeToken)
             buffer.writeString(value.namespaceName)
@@ -2878,7 +2884,7 @@ class IlReferenceTypeDto_Unknown (
 
 
 /**
- * #### Generated from [IlModel.kt:172]
+ * #### Generated from [IlModel.kt:176]
  */
 class IlSignatureDto (
     val returnType: TypeId,
@@ -2956,7 +2962,7 @@ class IlSignatureDto (
 
 
 /**
- * #### Generated from [IlModel.kt:82]
+ * #### Generated from [IlModel.kt:85]
  */
 class IlStructTypeDto (
     asmName: String,
@@ -3026,7 +3032,7 @@ class IlStructTypeDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlStructTypeDto  {
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val moduleToken = buffer.readInt()
             val typeToken = buffer.readInt()
             val namespaceName = buffer.readString()
@@ -3059,7 +3065,7 @@ class IlStructTypeDto (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlStructTypeDto)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeInt(value.moduleToken)
             buffer.writeInt(value.typeToken)
             buffer.writeString(value.namespaceName)
@@ -3213,7 +3219,7 @@ class IlStructTypeDto (
 
 
 /**
- * #### Generated from [IlModel.kt:126]
+ * #### Generated from [IlModel.kt:129]
  */
 class IlTempVarDto (
     type: TypeId,
@@ -3281,7 +3287,7 @@ class IlTempVarDto (
 
 
 /**
- * #### Generated from [IlModel.kt:35]
+ * #### Generated from [IlModel.kt:38]
  */
 abstract class IlTypeDto (
     val asmName: String,
@@ -3320,7 +3326,7 @@ abstract class IlTypeDto (
     companion object : IAbstractDeclaration<IlTypeDto> {
         override fun readUnknownInstance(ctx: SerializationCtx, buffer: AbstractBuffer, unknownId: RdId, size: Int): IlTypeDto  {
             val objectStartPosition = buffer.position
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val moduleToken = buffer.readInt()
             val typeToken = buffer.readInt()
             val namespaceName = buffer.readString()
@@ -3442,7 +3448,7 @@ class IlTypeDto_Unknown (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlTypeDto_Unknown)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeInt(value.moduleToken)
             buffer.writeInt(value.typeToken)
             buffer.writeString(value.namespaceName)
@@ -3597,7 +3603,7 @@ class IlTypeDto_Unknown (
 
 
 /**
- * #### Generated from [IlModel.kt:71]
+ * #### Generated from [IlModel.kt:74]
  */
 abstract class IlValueTypeDto (
     asmName: String,
@@ -3665,7 +3671,7 @@ abstract class IlValueTypeDto (
     companion object : IAbstractDeclaration<IlValueTypeDto> {
         override fun readUnknownInstance(ctx: SerializationCtx, buffer: AbstractBuffer, unknownId: RdId, size: Int): IlValueTypeDto  {
             val objectStartPosition = buffer.position
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val moduleToken = buffer.readInt()
             val typeToken = buffer.readInt()
             val namespaceName = buffer.readString()
@@ -3787,7 +3793,7 @@ class IlValueTypeDto_Unknown (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlValueTypeDto_Unknown)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeInt(value.moduleToken)
             buffer.writeInt(value.typeToken)
             buffer.writeString(value.namespaceName)
@@ -3942,7 +3948,7 @@ class IlValueTypeDto_Unknown (
 
 
 /**
- * #### Generated from [IlModel.kt:117]
+ * #### Generated from [IlModel.kt:120]
  */
 abstract class IlVarDto (
     val type: TypeId,
@@ -4042,7 +4048,7 @@ class IlVarDto_Unknown (
 
 
 /**
- * #### Generated from [IlModel.kt:29]
+ * #### Generated from [IlModel.kt:32]
  */
 class TypeId (
     val typeArgs: List<TypeIdBase>,
@@ -4059,14 +4065,14 @@ class TypeId (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): TypeId  {
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val typeName = buffer.readString()
             val typeArgs = buffer.readList { ctx.serializers.readPolymorphic<TypeIdBase>(ctx, buffer, TypeIdBase) }
             return TypeId(typeArgs, asmName, typeName)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: TypeId)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeString(value.typeName)
             buffer.writeList(value.typeArgs) { v -> ctx.serializers.writePolymorphic(ctx, buffer, v) }
         }
@@ -4116,7 +4122,7 @@ class TypeId (
 
 
 /**
- * #### Generated from [IlModel.kt:24]
+ * #### Generated from [IlModel.kt:27]
  */
 abstract class TypeIdBase (
     val asmName: String,
@@ -4127,7 +4133,7 @@ abstract class TypeIdBase (
     companion object : IAbstractDeclaration<TypeIdBase> {
         override fun readUnknownInstance(ctx: SerializationCtx, buffer: AbstractBuffer, unknownId: RdId, size: Int): TypeIdBase  {
             val objectStartPosition = buffer.position
-            val asmName = buffer.readString()
+            val asmName = ctx.readInterned(buffer, "InternScope") { _, _ -> buffer.readString() }
             val typeName = buffer.readString()
             val unknownBytes = ByteArray(objectStartPosition + size - buffer.position)
             buffer.readByteArrayRaw(unknownBytes)
@@ -4168,7 +4174,7 @@ class TypeIdBase_Unknown (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: TypeIdBase_Unknown)  {
-            buffer.writeString(value.asmName)
+            ctx.writeInterned(buffer, value.asmName, "InternScope") { _, _, internedValue -> buffer.writeString(internedValue) }
             buffer.writeString(value.typeName)
             buffer.writeByteArrayRaw(value.unknownBytes)
         }

@@ -101,7 +101,7 @@ class IlMethodImpl(override val declaringType: IlTypeImpl, private val dto: IlMe
     val temps: List<IlTempVar> by lazy(PUBLICATION) { dto.temps.map { IlTempVar(it, publication) } }
     val errs: List<IlErrVar> by lazy(PUBLICATION) { dto.errs.map { IlErrVar(it, publication) } }
     override val scopes: List<IlEhScope> by lazy(PUBLICATION) { dto.ehScopes.map { IlEhScope.deserialize(this, it) } }
-
+    override val fileLocation: String? = dto.filePath
     override fun equals(other: Any?): Boolean {
         if (other == null || other !is IlMethodImpl) return false
 

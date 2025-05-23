@@ -19,10 +19,13 @@
 package org.jacodb.api.net.models
 
 import com.jetbrains.rd.generator.nova.*
+import org.jacodb.api.net.models.IlMethodBodyModel.stmtLocInternScope
 
 object IlModel : Ext(IlRoot) {
+    val internScope = InternScope(this)
+
     val typeIdBase = basestruct {
-        field("asmName", PredefinedType.string)
+        field("asmName", PredefinedType.string.interned(internScope))
         field("typeName", PredefinedType.string)
     }
 
@@ -33,7 +36,7 @@ object IlModel : Ext(IlRoot) {
     val IlDto = basestruct {}
 
     val IlTypeDto = basestruct extends IlDto {
-        field("asmName", PredefinedType.string)
+        field("asmName", PredefinedType.string.interned(internScope))
         field("moduleToken", PredefinedType.int)
         field("typeToken", PredefinedType.int)
         field("namespaceName", PredefinedType.string)
@@ -167,6 +170,7 @@ object IlModel : Ext(IlRoot) {
         field("isVirtual", PredefinedType.bool)
         field("isAbstract", PredefinedType.bool)
         field("baseMethod", IlMethodBodyModel.instanceId.nullable)
+        field("filePath", PredefinedType.string.interned(stmtLocInternScope).nullable)
     }
 
     val IlSignatureDto = structdef extends IlDto {

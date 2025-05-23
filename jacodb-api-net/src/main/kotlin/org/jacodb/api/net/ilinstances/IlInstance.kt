@@ -24,7 +24,6 @@ import org.jacodb.api.net.IlPublication
 import org.jacodb.api.net.generated.models.IlStmtDto
 import org.jacodb.api.net.generated.models.TypeId
 import org.jacodb.api.net.ilinstances.impl.IlEhScope
-import org.jacodb.api.net.ilinstances.impl.IlTypeImpl
 
 interface IlInstance {
     val isConstructed: Boolean
@@ -96,6 +95,7 @@ interface IlMethod : IlInstance, CommonMethod {
     val instList: List<IlStmt>
     override val parameters: List<IlParameter>
     val scopes: List<IlEhScope>
+    val fileLocation: String?
 }
 
 interface IlParameter : IlInstance, CommonMethodParameter {

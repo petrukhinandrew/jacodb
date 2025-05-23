@@ -44,6 +44,8 @@ class IlMethodVirtual(
 ) : IlMethod {
     // TODO
     override val isConstructed: Boolean = true
+    override val fileLocation: String?
+        get() =  null
     override val scopes: List<IlEhScope>
         get() = listOf()
 

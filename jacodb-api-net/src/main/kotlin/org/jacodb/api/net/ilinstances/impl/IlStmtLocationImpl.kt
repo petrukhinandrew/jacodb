@@ -16,15 +16,16 @@
 
 package org.jacodb.api.net.ilinstances.impl
 
-import org.jacodb.api.jvm.JcMethod
 import org.jacodb.api.net.ilinstances.IlMethod
 import org.jacodb.api.net.ilinstances.IlStmtLocation
-import org.jacodb.impl.cfg.JcInstLocationImpl
 
 class IlStmtLocationImpl(
     override val method: IlMethod,
-    override val index: Int
+    override val index: Int,
+    override val fileLineIndex: Int?
 ) : IlStmtLocation {
+    override val filePath: String? = method.fileLocation
+
     override fun toString(): String {
         return "${method.declaringType.name}#${method.name}"
     }

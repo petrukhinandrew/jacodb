@@ -144,7 +144,7 @@ class IlMethodBodyModel private constructor(
         }
         
         
-        const val serializationHash = -2282983157299199343L
+        const val serializationHash = -452128083975823807L
         
     }
     override val serializersOwner: ISerializersOwner get() = IlMethodBodyModel
@@ -262,7 +262,7 @@ class IlAddOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:85]
+ * #### Generated from [IlMethodBodyModel.kt:90]
  */
 class IlAndOpDto (
     lhv: IlExprDto,
@@ -351,7 +351,7 @@ class IlAndOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:205]
+ * #### Generated from [IlMethodBodyModel.kt:250]
  */
 class IlArgAccessDto (
     val index: Int,
@@ -418,7 +418,7 @@ class IlArgAccessDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:153]
+ * #### Generated from [IlMethodBodyModel.kt:180]
  */
 class IlArgListRefDto (
     val method: InstanceId,
@@ -485,7 +485,7 @@ class IlArgListRefDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:109]
+ * #### Generated from [IlMethodBodyModel.kt:125]
  */
 class IlArrayAccessDto (
     val array: IlExprDto,
@@ -625,7 +625,7 @@ class IlArrayConstDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:118]
+ * #### Generated from [IlMethodBodyModel.kt:135]
  */
 class IlArrayLengthExprDto (
     val array: IlExprDto,
@@ -692,12 +692,14 @@ class IlArrayLengthExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:163]
+ * #### Generated from [IlMethodBodyModel.kt:196]
  */
 class IlAssignStmtDto (
     val lhv: IlValueDto,
-    val rhv: IlExprDto
+    val rhv: IlExprDto,
+    fileLineIdx: Int?
 ) : IlStmtDto (
+    fileLineIdx
 ) {
     //companion
     
@@ -706,12 +708,14 @@ class IlAssignStmtDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlAssignStmtDto  {
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
             val lhv = ctx.serializers.readPolymorphic<IlValueDto>(ctx, buffer, IlValueDto)
             val rhv = ctx.serializers.readPolymorphic<IlExprDto>(ctx, buffer, IlExprDto)
-            return IlAssignStmtDto(lhv, rhv)
+            return IlAssignStmtDto(lhv, rhv, fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlAssignStmtDto)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
             ctx.serializers.writePolymorphic(ctx, buffer, value.lhv)
             ctx.serializers.writePolymorphic(ctx, buffer, value.rhv)
         }
@@ -731,6 +735,7 @@ class IlAssignStmtDto (
         
         if (lhv != other.lhv) return false
         if (rhv != other.rhv) return false
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
@@ -739,6 +744,7 @@ class IlAssignStmtDto (
         var __r = 0
         __r = __r*31 + lhv.hashCode()
         __r = __r*31 + rhv.hashCode()
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
@@ -747,6 +753,7 @@ class IlAssignStmtDto (
         printer.indent {
             print("lhv = "); lhv.print(printer); println()
             print("rhv = "); rhv.print(printer); println()
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
         }
         printer.print(")")
     }
@@ -950,7 +957,7 @@ class IlBoolConstDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:130]
+ * #### Generated from [IlMethodBodyModel.kt:149]
  */
 class IlBoxExprDto (
     val boxedType: TypeId,
@@ -1031,11 +1038,13 @@ class IlBoxExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:189]
+ * #### Generated from [IlMethodBodyModel.kt:234]
  */
 abstract class IlBranchStmtDto (
-    val target: Int
+    val target: Int,
+    fileLineIdx: Int?
 ) : IlStmtDto (
+    fileLineIdx
 ) {
     //companion
     
@@ -1043,9 +1052,10 @@ abstract class IlBranchStmtDto (
         override fun readUnknownInstance(ctx: SerializationCtx, buffer: AbstractBuffer, unknownId: RdId, size: Int): IlBranchStmtDto  {
             val objectStartPosition = buffer.position
             val target = buffer.readInt()
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
             val unknownBytes = ByteArray(objectStartPosition + size - buffer.position)
             buffer.readByteArrayRaw(unknownBytes)
-            return IlBranchStmtDto_Unknown(target, unknownId, unknownBytes)
+            return IlBranchStmtDto_Unknown(target, fileLineIdx, unknownId, unknownBytes)
         }
         
         
@@ -1064,10 +1074,12 @@ abstract class IlBranchStmtDto (
 
 class IlBranchStmtDto_Unknown (
     target: Int,
+    fileLineIdx: Int?,
     override val unknownId: RdId,
     val unknownBytes: ByteArray
 ) : IlBranchStmtDto (
-    target
+    target,
+    fileLineIdx
 ), IUnknownInstance {
     //companion
     
@@ -1081,6 +1093,7 @@ class IlBranchStmtDto_Unknown (
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlBranchStmtDto_Unknown)  {
             buffer.writeInt(value.target)
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
             buffer.writeByteArrayRaw(value.unknownBytes)
         }
         
@@ -1098,6 +1111,7 @@ class IlBranchStmtDto_Unknown (
         other as IlBranchStmtDto_Unknown
         
         if (target != other.target) return false
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
@@ -1105,6 +1119,7 @@ class IlBranchStmtDto_Unknown (
     override fun hashCode(): Int  {
         var __r = 0
         __r = __r*31 + target.hashCode()
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
@@ -1112,6 +1127,7 @@ class IlBranchStmtDto_Unknown (
         printer.println("IlBranchStmtDto_Unknown (")
         printer.indent {
             print("target = "); target.print(printer); println()
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
         }
         printer.print(")")
     }
@@ -1123,7 +1139,7 @@ class IlBranchStmtDto_Unknown (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:119]
+ * #### Generated from [IlMethodBodyModel.kt:137]
  */
 class IlCallDto (
     val method: InstanceId,
@@ -1196,11 +1212,13 @@ class IlCallDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:168]
+ * #### Generated from [IlMethodBodyModel.kt:202]
  */
 class IlCallStmtDto (
-    val call: IlCallDto
+    val call: IlCallDto,
+    fileLineIdx: Int?
 ) : IlStmtDto (
+    fileLineIdx
 ) {
     //companion
     
@@ -1209,11 +1227,13 @@ class IlCallStmtDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlCallStmtDto  {
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
             val call = IlCallDto.read(ctx, buffer)
-            return IlCallStmtDto(call)
+            return IlCallStmtDto(call, fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlCallStmtDto)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
             IlCallDto.write(ctx, buffer, value.call)
         }
         
@@ -1231,6 +1251,7 @@ class IlCallStmtDto (
         other as IlCallStmtDto
         
         if (call != other.call) return false
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
@@ -1238,6 +1259,7 @@ class IlCallStmtDto (
     override fun hashCode(): Int  {
         var __r = 0
         __r = __r*31 + call.hashCode()
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
@@ -1245,6 +1267,7 @@ class IlCallStmtDto (
         printer.println("IlCallStmtDto (")
         printer.indent {
             print("call = "); call.print(printer); println()
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
         }
         printer.print(")")
     }
@@ -1256,7 +1279,7 @@ class IlCallStmtDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:156]
+ * #### Generated from [IlMethodBodyModel.kt:184]
  */
 class IlCalliDto (
     val signature: IlSignatureDto,
@@ -1335,11 +1358,13 @@ class IlCalliDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:171]
+ * #### Generated from [IlMethodBodyModel.kt:206]
  */
 class IlCalliStmtDto (
-    val calli: IlCalliDto
+    val calli: IlCalliDto,
+    fileLineIdx: Int?
 ) : IlStmtDto (
+    fileLineIdx
 ) {
     //companion
     
@@ -1348,11 +1373,13 @@ class IlCalliStmtDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlCalliStmtDto  {
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
             val calli = IlCalliDto.read(ctx, buffer)
-            return IlCalliStmtDto(calli)
+            return IlCalliStmtDto(calli, fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlCalliStmtDto)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
             IlCalliDto.write(ctx, buffer, value.calli)
         }
         
@@ -1370,6 +1397,7 @@ class IlCalliStmtDto (
         other as IlCalliStmtDto
         
         if (calli != other.calli) return false
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
@@ -1377,6 +1405,7 @@ class IlCalliStmtDto (
     override fun hashCode(): Int  {
         var __r = 0
         __r = __r*31 + calli.hashCode()
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
@@ -1384,6 +1413,7 @@ class IlCalliStmtDto (
         printer.println("IlCalliStmtDto (")
         printer.indent {
             print("calli = "); calli.print(printer); println()
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
         }
         printer.print(")")
     }
@@ -1395,7 +1425,7 @@ class IlCalliStmtDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:134]
+ * #### Generated from [IlMethodBodyModel.kt:155]
  */
 class IlCastClassExprDto (
     targetType: TypeId,
@@ -1470,7 +1500,7 @@ class IlCastClassExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:124]
+ * #### Generated from [IlMethodBodyModel.kt:142]
  */
 abstract class IlCastExprDto (
     val targetType: TypeId,
@@ -1579,7 +1609,7 @@ class IlCastExprDto_Unknown (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:90]
+ * #### Generated from [IlMethodBodyModel.kt:100]
  */
 class IlCeqOpDto (
     lhv: IlExprDto,
@@ -1668,7 +1698,7 @@ class IlCeqOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:93]
+ * #### Generated from [IlMethodBodyModel.kt:106]
  */
 class IlCgeOpDto (
     lhv: IlExprDto,
@@ -1757,7 +1787,7 @@ class IlCgeOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:92]
+ * #### Generated from [IlMethodBodyModel.kt:104]
  */
 class IlCgtOpDto (
     lhv: IlExprDto,
@@ -1913,7 +1943,7 @@ class IlCharConstDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:95]
+ * #### Generated from [IlMethodBodyModel.kt:110]
  */
 class IlCleOpDto (
     lhv: IlExprDto,
@@ -2002,7 +2032,7 @@ class IlCleOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:94]
+ * #### Generated from [IlMethodBodyModel.kt:108]
  */
 class IlCltOpDto (
     lhv: IlExprDto,
@@ -2091,7 +2121,7 @@ class IlCltOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:91]
+ * #### Generated from [IlMethodBodyModel.kt:102]
  */
 class IlCneOpDto (
     lhv: IlExprDto,
@@ -2273,7 +2303,7 @@ class IlConstDto_Unknown (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:129]
+ * #### Generated from [IlMethodBodyModel.kt:147]
  */
 class IlConvExprDto (
     targetType: TypeId,
@@ -2348,7 +2378,7 @@ class IlConvExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:141]
+ * #### Generated from [IlMethodBodyModel.kt:164]
  */
 abstract class IlDerefExprDto (
     val value: IlExprDto,
@@ -2449,7 +2479,7 @@ class IlDerefExprDto_Unknown (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:83]
+ * #### Generated from [IlMethodBodyModel.kt:86]
  */
 class IlDivOpDto (
     lhv: IlExprDto,
@@ -2605,19 +2635,22 @@ class IlDoubleConstDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:178]
+ * #### Generated from [IlMethodBodyModel.kt:215]
  */
 abstract class IlEhStmtDto (
+    fileLineIdx: Int?
 ) : IlStmtDto (
+    fileLineIdx
 ) {
     //companion
     
     companion object : IAbstractDeclaration<IlEhStmtDto> {
         override fun readUnknownInstance(ctx: SerializationCtx, buffer: AbstractBuffer, unknownId: RdId, size: Int): IlEhStmtDto  {
             val objectStartPosition = buffer.position
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
             val unknownBytes = ByteArray(objectStartPosition + size - buffer.position)
             buffer.readByteArrayRaw(unknownBytes)
-            return IlEhStmtDto_Unknown(unknownId, unknownBytes)
+            return IlEhStmtDto_Unknown(fileLineIdx, unknownId, unknownBytes)
         }
         
         
@@ -2635,9 +2668,11 @@ abstract class IlEhStmtDto (
 
 
 class IlEhStmtDto_Unknown (
+    fileLineIdx: Int?,
     override val unknownId: RdId,
     val unknownBytes: ByteArray
 ) : IlEhStmtDto (
+    fileLineIdx
 ), IUnknownInstance {
     //companion
     
@@ -2650,6 +2685,7 @@ class IlEhStmtDto_Unknown (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlEhStmtDto_Unknown)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
             buffer.writeByteArrayRaw(value.unknownBytes)
         }
         
@@ -2666,17 +2702,22 @@ class IlEhStmtDto_Unknown (
         
         other as IlEhStmtDto_Unknown
         
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
     //hash code trait
     override fun hashCode(): Int  {
         var __r = 0
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
     override fun print(printer: PrettyPrinter)  {
         printer.println("IlEhStmtDto_Unknown (")
+        printer.indent {
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
+        }
         printer.print(")")
     }
     
@@ -2687,10 +2728,12 @@ class IlEhStmtDto_Unknown (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:184]
+ * #### Generated from [IlMethodBodyModel.kt:226]
  */
 class IlEndFaultStmtDto (
+    fileLineIdx: Int?
 ) : IlEhStmtDto (
+    fileLineIdx
 ) {
     //companion
     
@@ -2699,10 +2742,12 @@ class IlEndFaultStmtDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlEndFaultStmtDto  {
-            return IlEndFaultStmtDto()
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
+            return IlEndFaultStmtDto(fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlEndFaultStmtDto)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
         }
         
         
@@ -2718,17 +2763,22 @@ class IlEndFaultStmtDto (
         
         other as IlEndFaultStmtDto
         
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
     //hash code trait
     override fun hashCode(): Int  {
         var __r = 0
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
     override fun print(printer: PrettyPrinter)  {
         printer.println("IlEndFaultStmtDto (")
+        printer.indent {
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
+        }
         printer.print(")")
     }
     
@@ -2739,11 +2789,13 @@ class IlEndFaultStmtDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:185]
+ * #### Generated from [IlMethodBodyModel.kt:229]
  */
 class IlEndFilterStmtDto (
-    val value: IlExprDto
+    val value: IlExprDto,
+    fileLineIdx: Int?
 ) : IlEhStmtDto (
+    fileLineIdx
 ) {
     //companion
     
@@ -2752,11 +2804,13 @@ class IlEndFilterStmtDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlEndFilterStmtDto  {
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
             val value = ctx.serializers.readPolymorphic<IlExprDto>(ctx, buffer, IlExprDto)
-            return IlEndFilterStmtDto(value)
+            return IlEndFilterStmtDto(value, fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlEndFilterStmtDto)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
             ctx.serializers.writePolymorphic(ctx, buffer, value.value)
         }
         
@@ -2774,6 +2828,7 @@ class IlEndFilterStmtDto (
         other as IlEndFilterStmtDto
         
         if (value != other.value) return false
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
@@ -2781,6 +2836,7 @@ class IlEndFilterStmtDto (
     override fun hashCode(): Int  {
         var __r = 0
         __r = __r*31 + value.hashCode()
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
@@ -2788,6 +2844,7 @@ class IlEndFilterStmtDto (
         printer.println("IlEndFilterStmtDto (")
         printer.indent {
             print("value = "); value.print(printer); println()
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
         }
         printer.print(")")
     }
@@ -2799,10 +2856,12 @@ class IlEndFilterStmtDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:183]
+ * #### Generated from [IlMethodBodyModel.kt:223]
  */
 class IlEndFinallyStmtDto (
+    fileLineIdx: Int?
 ) : IlEhStmtDto (
+    fileLineIdx
 ) {
     //companion
     
@@ -2811,10 +2870,12 @@ class IlEndFinallyStmtDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlEndFinallyStmtDto  {
-            return IlEndFinallyStmtDto()
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
+            return IlEndFinallyStmtDto(fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlEndFinallyStmtDto)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
         }
         
         
@@ -2830,17 +2891,22 @@ class IlEndFinallyStmtDto (
         
         other as IlEndFinallyStmtDto
         
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
     //hash code trait
     override fun hashCode(): Int  {
         var __r = 0
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
     override fun print(printer: PrettyPrinter)  {
         printer.println("IlEndFinallyStmtDto (")
+        printer.indent {
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
+        }
         printer.print(")")
     }
     
@@ -3015,7 +3081,7 @@ class IlExprDto_Unknown (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:105]
+ * #### Generated from [IlMethodBodyModel.kt:120]
  */
 class IlFieldAccessDto (
     val instance: IlExprDto?,
@@ -3222,12 +3288,14 @@ class IlFloatConstDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:193]
+ * #### Generated from [IlMethodBodyModel.kt:238]
  */
 class IlGotoStmtDto (
-    target: Int
+    target: Int,
+    fileLineIdx: Int?
 ) : IlBranchStmtDto (
-    target
+    target,
+    fileLineIdx
 ) {
     //companion
     
@@ -3237,11 +3305,13 @@ class IlGotoStmtDto (
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlGotoStmtDto  {
             val target = buffer.readInt()
-            return IlGotoStmtDto(target)
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
+            return IlGotoStmtDto(target, fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlGotoStmtDto)  {
             buffer.writeInt(value.target)
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
         }
         
         
@@ -3258,6 +3328,7 @@ class IlGotoStmtDto (
         other as IlGotoStmtDto
         
         if (target != other.target) return false
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
@@ -3265,6 +3336,7 @@ class IlGotoStmtDto (
     override fun hashCode(): Int  {
         var __r = 0
         __r = __r*31 + target.hashCode()
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
@@ -3272,6 +3344,7 @@ class IlGotoStmtDto (
         printer.println("IlGotoStmtDto (")
         printer.indent {
             print("target = "); target.print(printer); println()
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
         }
         printer.print(")")
     }
@@ -3283,13 +3356,15 @@ class IlGotoStmtDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:196]
+ * #### Generated from [IlMethodBodyModel.kt:241]
  */
 class IlIfStmtDto (
     val cond: IlExprDto,
-    target: Int
+    target: Int,
+    fileLineIdx: Int?
 ) : IlBranchStmtDto (
-    target
+    target,
+    fileLineIdx
 ) {
     //companion
     
@@ -3299,12 +3374,14 @@ class IlIfStmtDto (
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlIfStmtDto  {
             val target = buffer.readInt()
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
             val cond = ctx.serializers.readPolymorphic<IlExprDto>(ctx, buffer, IlExprDto)
-            return IlIfStmtDto(cond, target)
+            return IlIfStmtDto(cond, target, fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlIfStmtDto)  {
             buffer.writeInt(value.target)
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
             ctx.serializers.writePolymorphic(ctx, buffer, value.cond)
         }
         
@@ -3323,6 +3400,7 @@ class IlIfStmtDto (
         
         if (cond != other.cond) return false
         if (target != other.target) return false
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
@@ -3331,6 +3409,7 @@ class IlIfStmtDto (
         var __r = 0
         __r = __r*31 + cond.hashCode()
         __r = __r*31 + target.hashCode()
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
@@ -3339,6 +3418,7 @@ class IlIfStmtDto (
         printer.indent {
             print("cond = "); cond.print(printer); println()
             print("target = "); target.print(printer); println()
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
         }
         printer.print(")")
     }
@@ -3618,7 +3698,7 @@ class IlInt8ConstDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:135]
+ * #### Generated from [IlMethodBodyModel.kt:157]
  */
 class IlIsInstExprDto (
     targetType: TypeId,
@@ -3693,7 +3773,7 @@ class IlIsInstExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:147]
+ * #### Generated from [IlMethodBodyModel.kt:172]
  */
 class IlManagedDerefExprDto (
     value: IlExprDto,
@@ -3761,7 +3841,7 @@ class IlManagedDerefExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:145]
+ * #### Generated from [IlMethodBodyModel.kt:168]
  */
 class IlManagedRefExprDto (
     value: IlExprDto,
@@ -3896,7 +3976,7 @@ class IlMethodRefDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:82]
+ * #### Generated from [IlMethodBodyModel.kt:84]
  */
 class IlMulOpDto (
     lhv: IlExprDto,
@@ -4053,7 +4133,7 @@ class IlNegOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:114]
+ * #### Generated from [IlMethodBodyModel.kt:130]
  */
 class IlNewArrayExprDto (
     val elementType: TypeId,
@@ -4126,7 +4206,7 @@ class IlNewArrayExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:97]
+ * #### Generated from [IlMethodBodyModel.kt:112]
  */
 class IlNewExprDto (
     type: TypeId
@@ -4409,7 +4489,7 @@ class IlNumConstDto_Unknown (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:86]
+ * #### Generated from [IlMethodBodyModel.kt:92]
  */
 class IlOrOpDto (
     lhv: IlExprDto,
@@ -4498,7 +4578,7 @@ class IlOrOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:138]
+ * #### Generated from [IlMethodBodyModel.kt:160]
  */
 abstract class IlRefExprDto (
     val value: IlExprDto,
@@ -4599,7 +4679,7 @@ class IlRefExprDto_Unknown (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:84]
+ * #### Generated from [IlMethodBodyModel.kt:88]
  */
 class IlRemOpDto (
     lhv: IlExprDto,
@@ -4688,10 +4768,12 @@ class IlRemOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:182]
+ * #### Generated from [IlMethodBodyModel.kt:220]
  */
 class IlRethrowStmtDto (
+    fileLineIdx: Int?
 ) : IlEhStmtDto (
+    fileLineIdx
 ) {
     //companion
     
@@ -4700,10 +4782,12 @@ class IlRethrowStmtDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlRethrowStmtDto  {
-            return IlRethrowStmtDto()
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
+            return IlRethrowStmtDto(fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlRethrowStmtDto)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
         }
         
         
@@ -4719,17 +4803,22 @@ class IlRethrowStmtDto (
         
         other as IlRethrowStmtDto
         
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
     //hash code trait
     override fun hashCode(): Int  {
         var __r = 0
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
     override fun print(printer: PrettyPrinter)  {
         printer.println("IlRethrowStmtDto (")
+        printer.indent {
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
+        }
         printer.print(")")
     }
     
@@ -4740,11 +4829,13 @@ class IlRethrowStmtDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:174]
+ * #### Generated from [IlMethodBodyModel.kt:210]
  */
 class IlReturnStmtDto (
-    val retVal: IlExprDto?
+    val retVal: IlExprDto?,
+    fileLineIdx: Int?
 ) : IlStmtDto (
+    fileLineIdx
 ) {
     //companion
     
@@ -4753,11 +4844,13 @@ class IlReturnStmtDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlReturnStmtDto  {
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
             val retVal = buffer.readNullable { ctx.serializers.readPolymorphic<IlExprDto>(ctx, buffer, IlExprDto) }
-            return IlReturnStmtDto(retVal)
+            return IlReturnStmtDto(retVal, fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlReturnStmtDto)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
             buffer.writeNullable(value.retVal) { ctx.serializers.writePolymorphic(ctx, buffer, it) }
         }
         
@@ -4775,6 +4868,7 @@ class IlReturnStmtDto (
         other as IlReturnStmtDto
         
         if (retVal != other.retVal) return false
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
@@ -4782,6 +4876,7 @@ class IlReturnStmtDto (
     override fun hashCode(): Int  {
         var __r = 0
         __r = __r*31 + if (retVal != null) retVal.hashCode() else 0
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
@@ -4789,6 +4884,7 @@ class IlReturnStmtDto (
         printer.println("IlReturnStmtDto (")
         printer.indent {
             print("retVal = "); retVal.print(printer); println()
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
         }
         printer.print(")")
     }
@@ -4800,7 +4896,7 @@ class IlReturnStmtDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:88]
+ * #### Generated from [IlMethodBodyModel.kt:96]
  */
 class IlShlOpDto (
     lhv: IlExprDto,
@@ -4889,7 +4985,7 @@ class IlShlOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:89]
+ * #### Generated from [IlMethodBodyModel.kt:98]
  */
 class IlShrOpDto (
     lhv: IlExprDto,
@@ -4978,7 +5074,7 @@ class IlShrOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:100]
+ * #### Generated from [IlMethodBodyModel.kt:115]
  */
 class IlSizeOfExprDto (
     val targetType: TypeId,
@@ -5045,7 +5141,7 @@ class IlSizeOfExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:150]
+ * #### Generated from [IlMethodBodyModel.kt:176]
  */
 class IlStackAllocExprDto (
     val size: IlExprDto,
@@ -5112,18 +5208,20 @@ class IlStackAllocExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:161]
+ * #### Generated from [IlMethodBodyModel.kt:192]
  */
 abstract class IlStmtDto (
+    val fileLineIdx: Int?
 ) : IPrintable {
     //companion
     
     companion object : IAbstractDeclaration<IlStmtDto> {
         override fun readUnknownInstance(ctx: SerializationCtx, buffer: AbstractBuffer, unknownId: RdId, size: Int): IlStmtDto  {
             val objectStartPosition = buffer.position
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
             val unknownBytes = ByteArray(objectStartPosition + size - buffer.position)
             buffer.readByteArrayRaw(unknownBytes)
-            return IlStmtDto_Unknown(unknownId, unknownBytes)
+            return IlStmtDto_Unknown(fileLineIdx, unknownId, unknownBytes)
         }
         
         
@@ -5141,9 +5239,11 @@ abstract class IlStmtDto (
 
 
 class IlStmtDto_Unknown (
+    fileLineIdx: Int?,
     override val unknownId: RdId,
     val unknownBytes: ByteArray
 ) : IlStmtDto (
+    fileLineIdx
 ), IUnknownInstance {
     //companion
     
@@ -5156,6 +5256,7 @@ class IlStmtDto_Unknown (
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlStmtDto_Unknown)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
             buffer.writeByteArrayRaw(value.unknownBytes)
         }
         
@@ -5172,17 +5273,22 @@ class IlStmtDto_Unknown (
         
         other as IlStmtDto_Unknown
         
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
     //hash code trait
     override fun hashCode(): Int  {
         var __r = 0
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
     override fun print(printer: PrettyPrinter)  {
         printer.println("IlStmtDto_Unknown (")
+        printer.indent {
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
+        }
         printer.print(")")
     }
     
@@ -5260,7 +5366,7 @@ class IlStringConstDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:81]
+ * #### Generated from [IlMethodBodyModel.kt:82]
  */
 class IlSubOpDto (
     lhv: IlExprDto,
@@ -5349,11 +5455,13 @@ class IlSubOpDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:179]
+ * #### Generated from [IlMethodBodyModel.kt:216]
  */
 class IlThrowStmtDto (
-    val value: IlExprDto
+    val value: IlExprDto,
+    fileLineIdx: Int?
 ) : IlEhStmtDto (
+    fileLineIdx
 ) {
     //companion
     
@@ -5362,11 +5470,13 @@ class IlThrowStmtDto (
         
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): IlThrowStmtDto  {
+            val fileLineIdx = buffer.readNullable { buffer.readInt() }
             val value = ctx.serializers.readPolymorphic<IlExprDto>(ctx, buffer, IlExprDto)
-            return IlThrowStmtDto(value)
+            return IlThrowStmtDto(value, fileLineIdx)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: IlThrowStmtDto)  {
+            buffer.writeNullable(value.fileLineIdx) { buffer.writeInt(it) }
             ctx.serializers.writePolymorphic(ctx, buffer, value.value)
         }
         
@@ -5384,6 +5494,7 @@ class IlThrowStmtDto (
         other as IlThrowStmtDto
         
         if (value != other.value) return false
+        if (fileLineIdx != other.fileLineIdx) return false
         
         return true
     }
@@ -5391,6 +5502,7 @@ class IlThrowStmtDto (
     override fun hashCode(): Int  {
         var __r = 0
         __r = __r*31 + value.hashCode()
+        __r = __r*31 + if (fileLineIdx != null) fileLineIdx.hashCode() else 0
         return __r
     }
     //pretty print
@@ -5398,6 +5510,7 @@ class IlThrowStmtDto (
         printer.println("IlThrowStmtDto (")
         printer.indent {
             print("value = "); value.print(printer); println()
+            print("fileLineIdx = "); fileLineIdx.print(printer); println()
         }
         printer.print(")")
     }
@@ -5845,7 +5958,7 @@ class IlUnaryOpDto_Unknown (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:133]
+ * #### Generated from [IlMethodBodyModel.kt:153]
  */
 class IlUnboxExprDto (
     targetType: TypeId,
@@ -5920,7 +6033,7 @@ class IlUnboxExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:148]
+ * #### Generated from [IlMethodBodyModel.kt:174]
  */
 class IlUnmanagedDerefExprDto (
     value: IlExprDto,
@@ -5988,7 +6101,7 @@ class IlUnmanagedDerefExprDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:146]
+ * #### Generated from [IlMethodBodyModel.kt:170]
  */
 class IlUnmanagedRefExprDto (
     value: IlExprDto,
@@ -6149,7 +6262,7 @@ class IlValueDto_Unknown (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:208]
+ * #### Generated from [IlMethodBodyModel.kt:253]
  */
 class IlVarAccessDto (
     val kind: IlVarKind,
@@ -6222,7 +6335,7 @@ class IlVarAccessDto (
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:200]
+ * #### Generated from [IlMethodBodyModel.kt:245]
  */
 enum class IlVarKind {
     local, 
@@ -6237,7 +6350,7 @@ enum class IlVarKind {
 
 
 /**
- * #### Generated from [IlMethodBodyModel.kt:87]
+ * #### Generated from [IlMethodBodyModel.kt:94]
  */
 class IlXorOpDto (
     lhv: IlExprDto,

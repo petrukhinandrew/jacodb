@@ -78,20 +78,35 @@ object IlMethodBodyModel : Ext(IlRoot) {
     }
 
     private val IlAddOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlSubOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlMulOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlDivOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlRemOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlAndOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlOrOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlXorOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlShlOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlShrOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlCeqOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlCneOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlCgtOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlCgeOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlCltOpDto = structdef extends IlBinaryOpDto {}
+
     private val IlCleOpDto = structdef extends IlBinaryOpDto {}
 
     private val IlNewExprDto = structdef extends IlExprDto {
@@ -106,6 +121,7 @@ object IlMethodBodyModel : Ext(IlRoot) {
         field("instance", IlExprDto.nullable)
         field("field", instanceId)
     }
+
     private val IlArrayAccessDto = structdef extends IlValueDto {
         field("array", IlExprDto)
         field("index", IlExprDto)
@@ -115,7 +131,9 @@ object IlMethodBodyModel : Ext(IlRoot) {
         field("elementType", typeId)
         field("size", IlExprDto)
     }
+
     private val IlArrayLengthExprDto = structdef extends IlExprDto { field("array", IlExprDto) }
+
     private val IlCallDto = structdef extends IlExprDto {
         field("method", instanceId)
         field("args", immutableList(IlExprDto))
@@ -127,62 +145,89 @@ object IlMethodBodyModel : Ext(IlRoot) {
     }
 
     private val IlConvExprDto = structdef extends IlCastExprDto {}
+
     private val IlBoxExprDto = structdef extends IlCastExprDto {
         field("boxedType", typeId)
     }
+
     private val IlUnboxExprDto = structdef extends IlCastExprDto {}
+
     private val IlCastClassExprDto = structdef extends IlCastExprDto {}
+
     private val IlIsInstExprDto = structdef extends IlCastExprDto {}
 
     // TODO("seems improper")
     private val IlRefExprDto = basestruct extends IlValueDto {
         field("value", IlExprDto)
     }
+
     private val IlDerefExprDto = basestruct extends IlValueDto {
         field("value", IlExprDto)
     }
 
     private val IlManagedRefExprDto = structdef extends IlRefExprDto {}
+
     private val IlUnmanagedRefExprDto = structdef extends IlRefExprDto {}
+
     private val IlManagedDerefExprDto = structdef extends IlDerefExprDto {}
+
     private val IlUnmanagedDerefExprDto = structdef extends IlDerefExprDto {}
 
     private val IlStackAllocExprDto = structdef extends IlExprDto {
         field("size", IlExprDto)
     }
+
     private val IlArgListRefDto = structdef extends IlExprDto {
         field("method", instanceId)
     }
+
     private val IlCalliDto = structdef extends IlExprDto {
         field("signature", IlModel.IlSignatureDto)
         field("ftn", IlExprDto)
         field("args", immutableList(IlExprDto))
     }
-    val IlStmtDto = basestruct {}
+
+    val stmtLocInternScope = InternScope(this)
+
+    val IlStmtDto = basestruct {
+        field("fileLineIdx", PredefinedType.int.nullable)
+    }
 
     private val IlAssignStmtDto = structdef extends IlStmtDto {
+
         field("lhv", IlValueDto)
         field("rhv", IlExprDto)
     }
 
     private val IlCallStmtDto = structdef extends IlStmtDto {
+
         field("call", IlCallDto)
     }
     private val IlCalliStmtDto = structdef extends IlStmtDto {
+
         field("calli", IlCalliDto)
     }
     private val IlReturnStmtDto = structdef extends IlStmtDto {
+
         field("retVal", IlExprDto.nullable)
     }
 
     private val IlEhStmtDto = basestruct extends IlStmtDto {}
     private val IlThrowStmtDto = structdef extends IlEhStmtDto {
+
         field("value", IlExprDto)
     }
-    private val IlRethrowStmtDto = structdef extends IlEhStmtDto {}
-    private val IlEndFinallyStmtDto = structdef extends IlEhStmtDto {}
-    private val IlEndFaultStmtDto = structdef extends IlEhStmtDto {}
+    private val IlRethrowStmtDto = structdef extends IlEhStmtDto {
+
+    }
+    private val IlEndFinallyStmtDto = structdef extends IlEhStmtDto {
+
+    }
+    private val IlEndFaultStmtDto = structdef extends IlEhStmtDto {
+
+    }
     private val IlEndFilterStmtDto = structdef extends IlEhStmtDto {
+
         field("value", IlExprDto)
     }
 

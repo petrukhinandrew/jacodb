@@ -31,7 +31,7 @@ class IlMethodInstructionsFeature : IlMethodExtFeature {
     override fun instList(method: IlMethod): IlInstListResult {
         val insts = method.rawInstList.mapIndexed { index, inst ->
             IlStmt.deserialize(
-                IlStmtLocationImpl(method, index),
+                IlStmtLocationImpl(method, index, inst.fileLineIdx),
                 method,
                 inst
             )

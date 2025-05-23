@@ -134,7 +134,8 @@ class DtoSerializationExtKtTest {
                             )
                         },
                         type = TypeId(emptyList(), "charArr", "charArr")
-                    )
+                    ),
+                    fileLineIdx = null
                 )
             ),
             isStatic = false,
@@ -145,7 +146,8 @@ class DtoSerializationExtKtTest {
             genericArgs = listOf(),
             baseMethod = null,
             isVirtual = false,
-            isAbstract = false
+            isAbstract = false,
+            filePath = null
         )
 
         val method2 = IlMethodDto(
@@ -186,7 +188,8 @@ class DtoSerializationExtKtTest {
             genericArgs = listOf(),
             baseMethod = null,
             isVirtual = false,
-            isAbstract = false
+            isAbstract = false,
+            filePath = null
         )
 
         // Create the struct type with the mock fields and methods

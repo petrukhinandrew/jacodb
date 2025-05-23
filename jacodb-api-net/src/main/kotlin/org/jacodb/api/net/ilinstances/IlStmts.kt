@@ -26,6 +26,8 @@ import org.jacodb.api.net.generated.models.*
 
 interface IlStmtLocation : CommonInstLocation {
     override val method: IlMethod
+    val filePath: String?
+    val fileLineIndex: Int?
     val index: Int
 }
 
