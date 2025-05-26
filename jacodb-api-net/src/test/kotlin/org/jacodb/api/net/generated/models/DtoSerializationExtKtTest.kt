@@ -15,17 +15,30 @@
  */
 
 package org.jacodb.api.net.generated.models
+/*
+ *  Copyright 2022 UnitTestBot contributors (utbot.org)
+ * <p>
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * <p>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
-import org.mockito.kotlin.mock
 
 class DtoSerializationExtKtTest {
-    private val namesSize = 10
-    //region Generated with Explyt. Tests for DtoSerializationExtKt.getBytes(): ByteArray
-
     @Test
     fun validateSerializationOfIlPointerTypeDto() {
         val pointerType = IlPointerTypeDto(
@@ -69,13 +82,12 @@ class DtoSerializationExtKtTest {
 
     @Test
     fun validateSerializationOfIlStructTypeDto() {
-        // Create mock fields
         val field1 = IlFieldDto(
             fieldType = TypeId(
                 asmName = "System. String",
                 typeName = "String",
                 typeArgs = emptyList()
-            ), // Proper TypeId instantiation
+            ),
             isStatic = false,
             name = "field1",
             attrs = listOf(),
@@ -88,7 +100,7 @@ class DtoSerializationExtKtTest {
                 asmName = "System. Int32",
                 typeName = "Int",
                 typeArgs = emptyList()
-            ), // Proper TypeId instantiation
+            ),
             isStatic = true,
             name = "field2",
             attrs = listOf(),
@@ -96,13 +108,12 @@ class DtoSerializationExtKtTest {
             offset = 0
         )
 
-        // Create mock methods
         val method1 = IlMethodDto(
             returnType = TypeId(
                 asmName = "System. Void",
                 typeName = "Void",
                 typeArgs = emptyList()
-            ), // Proper TypeId instantiation
+            ),
             attrs = listOf(),
             name = "method1",
             parameters = listOf(
@@ -113,7 +124,7 @@ class DtoSerializationExtKtTest {
                     defaultValue = null,
                     attrs = listOf()
                 )
-            ), // Proper TypeId instantiation
+            ),
             resolved = true,
             locals = listOf(),
             temps = listOf(),
@@ -129,7 +140,7 @@ class DtoSerializationExtKtTest {
                     rhv = IlArrayConstDto(
                         values = listOf('1', '2', '3').map {
                             IlCharConstDto(
-                                it.toChar(),
+                                it,
                                 type = TypeId(emptyList(), "char", "char")
                             )
                         },
@@ -155,7 +166,7 @@ class DtoSerializationExtKtTest {
                 asmName = "System. Int32",
                 typeName = "Int",
                 typeArgs = emptyList()
-            ), // Proper TypeId instantiation
+            ),
             attrs = listOf(),
             name = "method2",
             parameters = listOf(
@@ -165,14 +176,14 @@ class DtoSerializationExtKtTest {
                     index = 0,
                     defaultValue = null,
                     attrs = listOf()
-                ), // Proper TypeId instantiation
+                ),
                 IlParameterDto(
                     name = "param2",
                     type = TypeId(asmName = "System. Int32", typeName = "Int", typeArgs = emptyList()),
                     index = 1,
                     defaultValue = null,
                     attrs = listOf()
-                ) // Proper TypeId instantiation
+                )
             ),
             resolved = false,
             locals = listOf(),
@@ -192,7 +203,6 @@ class DtoSerializationExtKtTest {
             filePath = null
         )
 
-        // Create the struct type with the mock fields and methods
         val structType = IlStructTypeDto(
             asmName = "asmName",
             namespaceName = "namespaceName",
@@ -203,8 +213,8 @@ class DtoSerializationExtKtTest {
             isValueType = true,
             isManaged = false,
             attrs = listOf(),
-            fields = listOf(field1, field2), // Added fields
-            methods = listOf(method1, method2), // Added methods
+            fields = listOf(field1, field2),
+            methods = listOf(method1, method2),
             moduleToken = 0,
             typeToken = 1,
             fullname = "lolkek",
@@ -225,21 +235,17 @@ class DtoSerializationExtKtTest {
             genericParameterConstraints = listOf()
         )
 
-        // Serialize and deserialize the struct type
         val bytes = structType.getBytes()
         val deserializedType = bytes.getIlTypeDto()
 
-        // Assertions to validate the deserialization
         assertIs<IlStructTypeDto>(deserializedType)
         assertEquals(structType.asmName, deserializedType.asmName)
         assertEquals(structType.namespaceName, deserializedType.namespaceName)
 
-        // Validate fields
         assertEquals(2, deserializedType.fields.size)
         assertEquals("field1", deserializedType.fields[0].name)
         assertEquals("field2", deserializedType.fields[1].name)
 
-        // Validate methods
         assertEquals(2, deserializedType.methods.size)
         assertEquals("method1", deserializedType.methods[0].name)
         assertEquals("method2", deserializedType.methods[1].name)
@@ -286,6 +292,179 @@ class DtoSerializationExtKtTest {
         assertEquals(arrayType.namespaceName, deserializedType.namespaceName)
     }
 
-    //endregion
+    @Test
+    fun `verify serialization and deserialization of IlPrimitiveTypeDto`() {
+        val primitiveType = IlPrimitiveTypeDto(
+            asmName = "primitiveAsm",
+            moduleToken = 123,
+            typeToken = 456,
+            namespaceName = "primitiveNamespace",
+            size = 4,
+            name = "primitiveName",
+            fullname = "primitiveFullname",
+            isConstructed = true,
+            declType = null,
+            baseType = null,
+            interfaces = emptyList(),
+            genericArgs = emptyList(),
+            isInterface = false,
+            isAbstract = false,
+            isGenericType = false,
+            genericParameterConstraints = emptyList(),
+            isGenericParam = false,
+            isGenericDefinition = false,
+            genericDefinition = null,
+            isCovariant = false,
+            isContravariant = false,
+            hasRefTypeConstraint = false,
+            hasNotNullValueTypeConstraint = false,
+            hasDefaultCtorConstraint = false,
+            isValueType = true,
+            isManaged = false,
+            attrs = emptyList(),
+            fields = emptyList(),
+            methods = emptyList()
+        )
 
+        val bytes = primitiveType.getBytes()
+        val deserializedType = bytes.getIlTypeDto()
+
+        assertIs<IlPrimitiveTypeDto>(deserializedType)
+        assertEquals(primitiveType.asmName, deserializedType.asmName)
+        assertEquals(primitiveType.namespaceName, deserializedType.namespaceName)
+    }
+
+    @Test
+    fun `verify serialization and deserialization of IlEnumTypeDto`() {
+        val underlyingType = TypeId(emptyList(), "enumAsm", "enumType")
+        val enumType = IlEnumTypeDto(
+            underlyingType = underlyingType,
+            names = listOf("VALUE1", "VALUE2"),
+            values = listOf(
+                IlCharConstDto('A', underlyingType),
+                IlCharConstDto('B', underlyingType)
+            ),
+            asmName = "enumAsm",
+            moduleToken = 789,
+            typeToken = 101,
+            namespaceName = "enumNamespace",
+            size = 8,
+            name = "enumName",
+            fullname = "enumFullname",
+            isConstructed = true,
+            declType = null,
+            baseType = null,
+            interfaces = emptyList(),
+            genericArgs = emptyList(),
+            isInterface = false,
+            isAbstract = false,
+            isGenericType = false,
+            genericParameterConstraints = emptyList(),
+            isGenericParam = false,
+            isGenericDefinition = false,
+            genericDefinition = null,
+            isCovariant = false,
+            isContravariant = false,
+            hasRefTypeConstraint = false,
+            hasNotNullValueTypeConstraint = false,
+            hasDefaultCtorConstraint = false,
+            isValueType = true,
+            isManaged = false,
+            attrs = emptyList(),
+            fields = emptyList(),
+            methods = emptyList()
+        )
+
+        val bytes = enumType.getBytes()
+        val deserializedType = bytes.getIlTypeDto()
+
+        assertIs<IlEnumTypeDto>(deserializedType)
+        assertEquals(enumType.underlyingType, deserializedType.underlyingType)
+        assertEquals(enumType.names, deserializedType.names)
+        assertEquals(enumType.values, deserializedType.values)
+    }
+
+    @Test
+    fun `verify serialization and deserialization of IlClassTypeDto`() {
+        val field = IlFieldDto(
+            fieldType = TypeId(emptyList(), "fieldAsm", "fieldType"),
+            isStatic = false,
+            name = "fieldName",
+            attrs = emptyList(),
+            isConstructed = true,
+            offset = 0
+        )
+
+        val method = IlMethodDto(
+            returnType = TypeId(emptyList(), "methodAsm", "methodType"),
+            attrs = emptyList(),
+            isStatic = false,
+            isGeneric = false,
+            isGenericDefinition = false,
+            signature = "methodSignature",
+            name = "methodName",
+            parameters = emptyList(),
+            genericArgs = emptyList(),
+            resolved = true,
+            locals = emptyList(),
+            temps = emptyList(),
+            errs = emptyList(),
+            ehScopes = emptyList(),
+            rawInstList = emptyList(),
+            isConstructed = true,
+            isVirtual = false,
+            isAbstract = false,
+            baseMethod = null,
+            filePath = null
+        )
+
+        val classType = IlClassTypeDto(
+            asmName = "classAsm",
+            moduleToken = 111,
+            typeToken = 222,
+            namespaceName = "classNamespace",
+            size = 16,
+            name = "className",
+            fullname = "classFullname",
+            isConstructed = true,
+            declType = null,
+            baseType = null,
+            interfaces = emptyList(),
+            genericArgs = emptyList(),
+            isInterface = false,
+            isAbstract = false,
+            isGenericType = false,
+            genericParameterConstraints = emptyList(),
+            isGenericParam = false,
+            isGenericDefinition = false,
+            genericDefinition = null,
+            isCovariant = false,
+            isContravariant = false,
+            hasRefTypeConstraint = false,
+            hasNotNullValueTypeConstraint = false,
+            hasDefaultCtorConstraint = false,
+            isValueType = false,
+            isManaged = true,
+            attrs = emptyList(),
+            fields = listOf(field),
+            methods = listOf(method)
+        )
+
+        val bytes = classType.getBytes()
+        val deserializedType = bytes.getIlTypeDto()
+
+        assertIs<IlClassTypeDto>(deserializedType)
+        assertEquals(classType.fields, deserializedType.fields)
+        assertEquals(classType.methods, deserializedType.methods)
+        assertEquals(classType.attrs, deserializedType.attrs)
+    }
+
+    @Test
+    fun `verify handling of unexpected byte array during deserialization`() {
+        val unexpectedBytes = byteArrayOf(99)
+        val exception = assertFailsWith<DtoDeserializationException> {
+            unexpectedBytes.getIlTypeDto()
+        }
+        assertEquals("Unexpected bytearray", exception.message)
+    }
 }

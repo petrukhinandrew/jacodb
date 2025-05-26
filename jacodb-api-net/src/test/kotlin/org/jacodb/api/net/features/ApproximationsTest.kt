@@ -17,4 +17,5 @@
 package org.jacodb.api.net.features
 
 class ApproximationsTest {
+
 }

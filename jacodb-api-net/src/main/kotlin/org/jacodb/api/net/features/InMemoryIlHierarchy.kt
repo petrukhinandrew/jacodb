@@ -18,19 +18,14 @@ package org.jacodb.api.net.features
 
 import org.jacodb.api.net.IlDatabase
 import org.jacodb.api.net.IlPublication
-import org.jacodb.api.net.generated.models.IlTypeDto
 import org.jacodb.api.net.generated.models.TypeId
-import org.jacodb.api.net.generated.models.getIlTypeDto
-import org.jacodb.api.net.ilinstances.IlThis
 import org.jacodb.api.net.ilinstances.IlType
 import org.jacodb.api.net.ilinstances.impl.IlReferenceType
-import org.jacodb.api.net.ilinstances.impl.IlStructType
 import org.jacodb.api.net.ilinstances.impl.IlValueType
 import org.jacodb.api.net.storage.asTypeId
 import org.jacodb.api.net.storage.interned
 import org.jacodb.api.net.storage.txn
 import org.jacodb.api.net.storage.withEmptyTypeArgs
-import org.jacodb.api.storage.ers.compressed
 import org.jacodb.api.storage.ers.links
 import java.util.concurrent.ConcurrentHashMap
 
@@ -103,23 +98,23 @@ object InMemoryIlHierarchy : IlFeature<InMemoryIlHierarchyReq, IlType> {
 
         fun Long.optGenericDefn() = asTypeId(typeIdInterner).withEmptyTypeArgs().interned(typeIdInterner)
         fun IlType.satisfyConstraintsOf(type: IlType): Boolean {
-            if (type.hasRefTypeConstraint && this !is IlReferenceType) return false;
-            if (type.hasNotNullValueTypeConstraint && this !is IlValueType) return false;
+            if (type.hasRefTypeConstraint && this !is IlReferenceType) return false
+            if (type.hasNotNullValueTypeConstraint && this !is IlValueType) return false
             // TODO defn improper
-            if (type.hasDefaultCtorConstraint && this !is IlValueType && this.methods.find { method -> method.name == ".ctor" && method.parameters.singleOrNull()?.type == this } == null) return false;
-            return true;
+            if (type.hasDefaultCtorConstraint && this !is IlValueType && this.methods.find { method -> method.name == ".ctor" && method.parameters.singleOrNull()?.type == this } == null) return false
+            return true
         }
 
         fun Long.isSupertypeOfOrNull(mbChild: Long): Long? {
             val supId = typeIdInterner.findValue(this)
             if (supId.typeArgs.isEmpty()) return mbChild
-//            val sup = publication.findIlTypeOrNull(supId) ?: return null
-//            if (!sup.isGenericType) return mbChild
-            // got a feeling that there is a mistake here
-//            val subId = typeIdInterner.findValue(mbChild)
-//            if (subId.typeArgs.isEmpty()) return mbChild
+
             val sub = publication.findIlTypeOrNull(typeIdInterner.findValue(mbChild)) ?: return null
-            if (!sub.isGenericType) return mbChild
+            // TODO: rework
+            val sup = publication.findIlTypeOrNull(supId) ?: return null
+            if (!sub.isGenericType) {
+                return if (sub.satisfyConstraintsOf(sup)) mbChild else null
+            }
             check(sub.isGenericDefinition)
             val supDef = publication.findIlTypeOrNull(supId.withEmptyTypeArgs())
             val matching =
@@ -135,7 +130,7 @@ object InMemoryIlHierarchy : IlFeature<InMemoryIlHierarchyReq, IlType> {
             val argSatisfyParamsConstraints = paramToArg.all { (param, arg) ->
                 arg == null || publication.findIlTypeOrNull(arg as TypeId)!!.satisfyConstraintsOf(param)
             }
-            if (!argSatisfyParamsConstraints) return null;
+            if (!argSatisfyParamsConstraints) return null
             val subTypeId = sub.id
             val requestTypeId = TypeId(
                 sub.genericDefinition!!.genericArgs.map { paramToArg[it] ?: it.id },
